@@ -1,0 +1,65 @@
+server:
+  port: 8080
+  error:
+    include-exception: false
+    include-message: always
+    include-stacktrace: never
+    include-binding-errors: always
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    info:
+      title: Example
+      description: Example
+      version: 1.0.0
+    groups-order: asc
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+  cache:
+    disabled: true
+  model-and-view-allowed: true
+
+spring:
+  application:
+    name: "example"
+  data:
+    redis:
+      repositories:
+        enabled: false
+      host: localhost
+      port: 6379
+
+    mongodb:
+      uri: mongodb://localhost:27017/example
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/example
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret-key: c644bf2a72ea69743e777b52e122d59506365cf46f0f8719454c432389e38d51bf1151ab3677e81f994be70ea061e7eaf81da76178a7e730c2967d590a992774
+  access-token-expires: 60000
+  refresh-token-expires: 3600000
+
+cloud:
+  aws:
+    sts:
+      region:
+    s3:
+      bucket:
+      region:
