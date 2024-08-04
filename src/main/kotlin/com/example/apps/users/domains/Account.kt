@@ -1,6 +1,5 @@
 package com.example.apps.users.domains
 
-import com.example.apps.users.enums.AccountType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -28,4 +27,8 @@ class Account(
     @Column(name = "type", nullable = false)
     @Enumerated(value = EnumType.STRING)
     val type: AccountType? = null
-)
+) {
+    enum class AccountType {
+        EMAIL
+    }
+}
