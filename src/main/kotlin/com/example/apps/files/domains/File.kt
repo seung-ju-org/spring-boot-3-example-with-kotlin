@@ -1,12 +1,15 @@
 package com.example.apps.files.domains
 
+import com.example.apps.users.domains.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.validation.constraints.Size
 import org.springframework.data.annotation.CreatedDate
@@ -49,7 +52,10 @@ class File(
 
     @Column(name = "created_at", nullable = false)
     @CreatedDate
-    var createdAt: LocalDateTime? = LocalDateTime.now()
+    var createdAt: LocalDateTime? = LocalDateTime.now(),
+
+    @OneToMany(fetch = FetchType.LAZY)
+    var users: MutableSet<User> = mutableSetOf()
 ) {
     enum class Status {
         READY, PROGRESS, DONE, ERROR,

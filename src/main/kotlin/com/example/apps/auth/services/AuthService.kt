@@ -33,7 +33,7 @@ class AuthService(
             lastName = join.lastName,
             password = join.password,
             nickname = join.nickname,
-            profile = join.profile,
+            profileFileId = join.profileFileId,
             phone = join.phone,
         )
     )

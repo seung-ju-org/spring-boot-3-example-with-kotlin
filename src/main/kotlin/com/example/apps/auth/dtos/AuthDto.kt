@@ -8,7 +8,7 @@ class AuthDto {
         var lastName: String? = null,
         var password: String? = null,
         var nickname: String? = null,
-        var profile: String? = null,
+        var profileFileId: Long? = null,
         var phone: String? = null
     )
 

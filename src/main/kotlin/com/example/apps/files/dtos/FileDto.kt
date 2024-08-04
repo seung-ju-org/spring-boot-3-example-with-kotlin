@@ -4,13 +4,13 @@ import java.time.LocalDateTime
 
 class FileDto {
     data class Response(
-        var id: Long,
-        var name: String,
-        var extension: String,
-        var serverPath: String,
-        var contentType: String,
-        var size: Long,
-        var createdAt: LocalDateTime
+        var id: Long? = null,
+        var name: String? = null,
+        var extension: String? = null,
+        var serverPath: String? = null,
+        var contentType: String? = null,
+        var size: Long? = null,
+        var createdAt: LocalDateTime? = null
     )
 
     data class CreateMultipartUpload(
