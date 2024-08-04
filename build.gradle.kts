@@ -40,6 +40,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.1")
@@ -52,6 +54,10 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
+    val kotlinSdkVersion = "1.3.3"
+    implementation("aws.sdk.kotlin:s3:$kotlinSdkVersion")
+    implementation("aws.sdk.kotlin:sts:$kotlinSdkVersion")
+    implementation("commons-io:commons-io:2.16.1")
 }
 
 kotlin {

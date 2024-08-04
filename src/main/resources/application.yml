@@ -52,14 +52,12 @@ spring:
       ddl-auto: update
 
 jwt:
-  secret-key: c644bf2a72ea69743e777b52e122d59506365cf46f0f8719454c432389e38d51bf1151ab3677e81f994be70ea061e7eaf81da76178a7e730c2967d590a992774
+  secret-key:
   access-token-expires: 60000
   refresh-token-expires: 3600000
 
 cloud:
   aws:
-    sts:
-      region:
     s3:
-      bucket:
       region:
+      bucket:

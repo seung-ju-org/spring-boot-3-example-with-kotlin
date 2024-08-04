@@ -24,12 +24,12 @@ class AuthController(
     private val authService: AuthService
 ) {
     @GetMapping("/me")
-    @Operation(summary = "Get Me", description = "Get Me")
+    @Operation(summary = "Get me", description = "Get me")
     @Secured(Authority.ROLES.USER)
     fun me(@AuthenticationPrincipal user: CustomUserDetails) = authService.me(user.user.id!!)
 
     @PatchMapping("/me")
-    @Operation(summary = "Update Me", description = "Update me")
+    @Operation(summary = "Update me", description = "Update me")
     @Secured(Authority.ROLES.USER)
     fun updateMe(
         @AuthenticationPrincipal user: CustomUserDetails,
@@ -37,12 +37,12 @@ class AuthController(
     ) = authService.updateMe(user.user.id!!, update)
 
     @DeleteMapping("/me")
-    @Operation(summary = "Delete Me", description = "Delete me")
+    @Operation(summary = "Delete me", description = "Delete me")
     @Secured(Authority.ROLES.USER)
     fun deleteMe(@AuthenticationPrincipal user: CustomUserDetails) = authService.deleteMe(user.user.id!!)
 
     @GetMapping("/sessions")
-    @Operation(summary = "Get Sessions", description = "Get sessions")
+    @Operation(summary = "Get sessions", description = "Get sessions")
     @Secured(Authority.ROLES.USER)
     fun sessions(@AuthenticationPrincipal user: CustomUserDetails) = authService.sessions(user.user.id!!)
 
@@ -70,6 +70,6 @@ class AuthController(
     ) = authService.logoutAll(user.user.id!!)
 
     @PostMapping("/oauth/token")
-    @Operation(summary = "Oauth Token", description = "Oauth Token")
+    @Operation(summary = "Oauth token", description = "Oauth Token")
     fun oauthToken(@RequestBody oauthToken: AuthDto.OauthToken) = authService.oauthToken(oauthToken)
 }
