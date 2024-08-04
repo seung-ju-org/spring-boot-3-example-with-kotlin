@@ -38,8 +38,8 @@ class JwtService(
         return refreshTokenRepository.save(
             RefreshToken(
                 jti = UUID.randomUUID().toString(),
-                refreshToken = Jwts.builder().signWith(secretKey).setIssuedAt(now)
-                    .setExpiration(expiration).setSubject(userId.toString()).compact(),
+                refreshToken = Jwts.builder().signWith(secretKey).issuedAt(now)
+                    .expiration(expiration).subject(userId.toString()).compact(),
                 userId,
                 createdAt = LocalDateTime.now(),
                 expiresAt = LocalDateTime.ofInstant(expiration.toInstant(), ZoneId.systemDefault())
@@ -117,8 +117,8 @@ class JwtService(
 
     fun extract(token: String): Claims {
         try {
-            return Jwts.parserBuilder().setSigningKey(secretKey).build()
-                .parseClaimsJws(token).body
+            return Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token).payload
         } catch (e: JwtException) {
             throw InvalidTokenException()
         }
