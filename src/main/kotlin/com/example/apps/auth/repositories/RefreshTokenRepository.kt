@@ -33,7 +33,9 @@ class RefreshTokenRepository(
         val valueOperations = redisTemplate.opsForValue()
         valueOperations[key] = refreshToken
         redisTemplate.expire(key, refreshTokenExpires.toLong(), TimeUnit.MILLISECONDS)
-        redisTemplate.opsForSet().add(getSetKey(refreshToken), refreshToken)
+        val setKey = getSetKey(refreshToken)
+        redisTemplate.opsForSet().add(setKey, refreshToken)
+        redisTemplate.expire(setKey, refreshTokenExpires.toLong(), TimeUnit.MILLISECONDS)
         return refreshToken
     }
 
