@@ -6,6 +6,7 @@ import com.example.apps.boards.domains.BoardCategorySnapshot
 import com.example.apps.boards.domains.BoardSnapshot
 import com.example.apps.boards.dtos.BoardCategoryDto
 import com.example.apps.boards.dtos.BoardDto
+import com.example.apps.boards.exceptions.NotFoundBoardCategoryException
 import com.example.apps.boards.exceptions.NotFoundBoardException
 import com.example.apps.boards.repositories.BoardCategoryRepository
 import com.example.apps.boards.repositories.BoardRepository
@@ -178,7 +179,18 @@ class BoardService(
         board.boardSnapshot = boardSnapshotRepository.save(
             BoardSnapshot(
                 board = board,
-                boardCategory = boardCategoryRepository.getReferenceById(update.boardCategoryId!!),
+                boardCategory = boardCategoryRepository.findAll {
+                    select(
+                        entity(BoardCategory::class)
+                    ).from(
+                        entity(BoardCategory::class)
+                    ).where(
+                        and(
+                            entity(BoardCategory::class)(BoardCategory::id).eq(update.boardCategoryId),
+                            entity(BoardCategory::class)(BoardCategory::deletedAt).isNull()
+                        )
+                    )
+                }.filterNotNull().firstOrNull() ?: throw NotFoundBoardCategoryException(),
                 title = update.title,
                 contents = update.contents
             )
