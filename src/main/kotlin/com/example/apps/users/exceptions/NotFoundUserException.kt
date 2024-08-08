@@ -4,7 +4,4 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-class NotFoundUserException : RuntimeException() {
-    override val message: String
-        get() = "Not found user"
-}
+class NotFoundUserException : RuntimeException("Not found user")
