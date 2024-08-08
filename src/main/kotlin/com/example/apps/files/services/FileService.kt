@@ -199,4 +199,12 @@ class FileService(
         size = file.size!!,
         createdAt = file.createdAt!!
     )
+
+    fun toSimpleResponse(file: File) = FileDto.SimpleResponse(
+        id = file.id!!,
+        name = file.name!!,
+        extension = file.extension!!,
+        contentType = file.contentType!!,
+        size = file.size!!,
+    )
 }

@@ -4,6 +4,7 @@ import com.example.apps.files.domains.File
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EntityListeners
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -14,10 +15,12 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener::class)
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,11 +52,11 @@ class User(
     @Column(name = "phone")
     var phone: String? = null,
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     @CreatedDate
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     @LastModifiedDate
     var updatedAt: LocalDateTime = LocalDateTime.now(),
 

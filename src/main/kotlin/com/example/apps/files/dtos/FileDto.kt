@@ -13,6 +13,14 @@ class FileDto {
         var createdAt: LocalDateTime? = null
     )
 
+    data class SimpleResponse(
+        var id: Long? = null,
+        var name: String? = null,
+        var extension: String? = null,
+        var contentType: String? = null,
+        var size: Long? = null
+    )
+
     data class CreateMultipartUpload(
         var name: String,
         var contentType: String,

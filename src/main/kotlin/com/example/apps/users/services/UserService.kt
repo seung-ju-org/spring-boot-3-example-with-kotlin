@@ -10,7 +10,6 @@ import com.example.apps.users.exceptions.AlreadyExistsUserException
 import com.example.apps.users.exceptions.IncorrectPasswordException
 import com.example.apps.users.exceptions.NotFoundUserException
 import com.example.apps.users.repositories.UserRepository
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -51,49 +50,44 @@ class UserService(
                     lastName = create.lastName,
                     password = passwordEncoder.encode(create.password),
                     nickname = create.nickname,
-                    profileFile = create.profileFileId?.let { fileRepository.getReferenceById(create.profileFileId!!) },
+                    profileFile = create.profileFileId?.let { fileRepository.getReferenceById(it) },
                     phone = create.phone,
                 )
             )
         )
     }
 
-    fun findAll(pageable: Pageable, request: UserDto.Request): Page<UserDto.Response?> {
-        return userRepository.findPage(pageable) {
-            selectNew<UserDto.Response>(
-                path(User::id),
-                path(User::email),
-                path(User::username),
-                path(User::firstName),
-                path(User::lastName),
-                path(User::nickname),
-                new(
-                    FileDto.Response::class,
-                    path(File::id),
-                    path(File::name),
-                    path(File::extension),
-                    path(File::serverPath),
-                    path(File::contentType),
-                    path(File::size),
-                    path(File::createdAt),
-                ),
-                path(User::phone),
-                path(User::createdAt),
-                path(User::updatedAt),
-            ).from(
-                entity(User::class),
-                leftJoin(User::profileFile)
-            ).where(
-                and(
-                    request.email?.let { entity(User::class)(User::email).like("%${request.email}%") },
-                    request.username?.let { entity(User::class)(User::username).like("%${request.username}") },
-                    request.firstName?.let { entity(User::class)(User::firstName).like("%${request.firstName}") },
-                    request.lastName?.let { entity(User::class)(User::lastName).like("%${request.lastName}") },
-                    request.nickname?.let { entity(User::class)(User::nickname).like("%${request.nickname}") },
-                    request.phone?.let { entity(User::class)(User::phone).like("%${request.phone}") }
-                )
+    fun findAll(pageable: Pageable, request: UserDto.Request) = userRepository.findPage(pageable) {
+        selectNew<UserDto.Response>(
+            path(User::id),
+            path(User::email),
+            path(User::username),
+            path(User::firstName),
+            path(User::lastName),
+            path(User::nickname),
+            new(
+                FileDto.SimpleResponse::class,
+                path(File::id),
+                path(File::name),
+                path(File::extension),
+                path(File::contentType),
+                path(File::size),
+            ),
+            path(User::phone),
+            path(User::createdAt),
+            path(User::updatedAt),
+        ).from(
+            entity(User::class), leftJoin(User::profileFile)
+        ).where(
+            and(
+                request.email?.let { entity(User::class)(User::email).like("%$it%") },
+                request.username?.let { entity(User::class)(User::username).like("%$it") },
+                request.firstName?.let { entity(User::class)(User::firstName).like("%$it") },
+                request.lastName?.let { entity(User::class)(User::lastName).like("%$it") },
+                request.nickname?.let { entity(User::class)(User::nickname).like("%$it") },
+                request.phone?.let { entity(User::class)(User::phone).like("%$it") }
             )
-        }
+        )
     }
 
     fun findById(id: Long) = userRepository.findAll {
@@ -105,21 +99,18 @@ class UserService(
             path(User::lastName),
             path(User::nickname),
             new(
-                FileDto.Response::class,
+                FileDto.SimpleResponse::class,
                 path(File::id),
                 path(File::name),
                 path(File::extension),
-                path(File::serverPath),
                 path(File::contentType),
                 path(File::size),
-                path(File::createdAt),
             ),
             path(User::phone),
             path(User::createdAt),
             path(User::updatedAt),
         ).from(
-            entity(User::class),
-            leftJoin(User::profileFile)
+            entity(User::class), leftJoin(User::profileFile)
         ).where(
             entity(User::class)(User::id).eq(id)
         )
@@ -134,21 +125,18 @@ class UserService(
             path(User::lastName),
             path(User::nickname),
             new(
-                FileDto.Response::class,
+                FileDto.SimpleResponse::class,
                 path(File::id),
                 path(File::name),
                 path(File::extension),
-                path(File::serverPath),
                 path(File::contentType),
                 path(File::size),
-                path(File::createdAt),
             ),
             path(User::phone),
             path(User::createdAt),
             path(User::updatedAt),
         ).from(
-            entity(User::class),
-            leftJoin(User::profileFile)
+            entity(User::class), leftJoin(User::profileFile)
         ).where(
             entity(User::class)(User::username).eq(username)
         )
@@ -184,12 +172,12 @@ class UserService(
             )
         }.filterNotNull().firstOrNull() ?: throw NotFoundUserException()
 
-        update.firstName?.let { user.firstName = update.firstName }
-        update.lastName?.let { user.lastName = update.lastName }
-        update.password?.let { user.password = passwordEncoder.encode(update.password) }
-        update.nickname?.let { user.nickname = update.nickname }
-        update.profileFileId?.let { user.profileFile = fileRepository.getReferenceById(update.profileFileId!!) }
-        update.phone?.let { user.phone = update.phone }
+        update.firstName?.let { user.firstName = it }
+        update.lastName?.let { user.lastName = it }
+        update.password?.let { user.password = passwordEncoder.encode(it) }
+        update.nickname?.let { user.nickname = it }
+        update.profileFileId?.let { user.profileFile = fileRepository.getReferenceById(it) }
+        update.phone?.let { user.phone = it }
         user = userRepository.save(user)
 
         return toDetailResponse(user)
@@ -235,10 +223,18 @@ class UserService(
             firstName = user.firstName,
             lastName = user.lastName,
             nickname = user.nickname,
-            profileFile = user.profileFile?.let { fileService.toResponse(it) },
+            profileFile = user.profileFile?.let { fileService.toSimpleResponse(it) },
             phone = user.phone,
             createdAt = user.createdAt,
             updatedAt = user.updatedAt
+        )
+    }
+
+    fun toSimpleResponse(user: User): UserDto.SimpleResponse {
+        return UserDto.SimpleResponse(
+            id = user.id,
+            nickname = user.nickname,
+            profileFile = user.profileFile?.let { fileService.toSimpleResponse(it) },
         )
     }
 }

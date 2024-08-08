@@ -31,7 +31,7 @@ class UserDto {
         var firstName: String? = null,
         var lastName: String? = null,
         var nickname: String? = null,
-        var profileFile: FileDto.Response? = null,
+        var profileFile: FileDto.SimpleResponse? = null,
         var phone: String? = null,
         var createdAt: LocalDateTime? = null,
         var updatedAt: LocalDateTime? = null,
@@ -44,10 +44,16 @@ class UserDto {
         var firstName: String? = null,
         var lastName: String? = null,
         var nickname: String? = null,
-        var profileFile: FileDto.Response? = null,
+        var profileFile: FileDto.SimpleResponse? = null,
         var phone: String? = null,
         var createdAt: LocalDateTime? = null,
         var updatedAt: LocalDateTime? = null,
+    )
+
+    data class SimpleResponse(
+        var id: Long? = null,
+        var nickname: String? = null,
+        var profileFile: FileDto.SimpleResponse? = null
     )
 
     data class Update(
